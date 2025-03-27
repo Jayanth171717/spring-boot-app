@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Employee</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
+
+    <h2 class="mb-4">Add Employee</h2>
+
+    <form id="employeeForm" th:action="@{/employees/save}" th:object="${employee}" method="post">
+        <div class="mb-3">
+            <label>Name:</label>
+            <input type="text" class="form-control" th:field="*{name}" required />
+        </div>
+
+        <!-- Phone Number with Validation -->
+        <div class="mb-3">
+            <label>Phone Number:</label>
+            <input type="text" class="form-control" th:field="*{phoneNumber}" id="phoneNumber" required />
+            <small class="text-danger" id="phoneError"></small>
+        </div>
+
+        <!-- Email with Validation -->
+        <div class="mb-3">
+            <label>Email:</label>
+            <input type="email" class="form-control" th:field="*{email}" id="email" required />
+            <small class="text-danger" id="emailError"></small>
+        </div>
+
+        <div class="mb-3">
+            <label>Department:</label>
+            <select class="form-control" th:field="*{department}" required>
+                <option value="">Select Department</option>
+                <option value="HR">HR</option>
+                <option value="IT">IT</option>
+                <option value="Finance">Finance</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Designation:</label>
+            <select class="form-control" th:field="*{designation}" required>
+                <option value="">Select Designation</option>
+                <option value="Manager">Manager</option>
+                <option value="Developer">Developer</option>
+                <option value="Accountant">Accountant</option>
+            </select>
+        </div>
+
+        <!-- Fix for Date of Birth Saving with Time -->
+        <div class="mb-3">
+            <label>Date of Birth:</label>
+            <input type="date" class="form-control" th:field="*{dob}" id="dob" required />
+        </div>
+
+        <div class="mb-3">
+            <label>Address :</label>
+            <textarea class="form-control" th:field="*{address1}" required></textarea>
+        </div>
+        
+        <div class="mb-3">
+            <textarea class="form-control" th:field="*{address2}" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label>City:</label>
+            <input type="text" class="form-control" th:field="*{city}" required />
+        </div>
+
+        <div class="mb-3">
+            <label>State:</label>
+            <select class="form-control" th:field="*{state}" required>
+                <option value="">Select State</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="Goa">Goa</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Country:</label>
+            <input type="text" class="form-control" th:field="*{country}" required />
+        </div>
+
+        <div class="mb-3">
+            <label>Pincode:</label>
+            <input type="text" class="form-control" th:field="*{pincode}" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let form = document.querySelector("form"); // Get the form
+        let phoneInput = document.getElementById("phoneNumber");
+        let emailInput = document.getElementById("email");
+
+        let phoneError = document.getElementById("phoneError");
+        let emailError = document.getElementById("emailError");
+
+        let phonePattern = /^\d{10}$/; // Ensures exactly 10 digits
+        let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        form.addEventListener("submit", function (event) {
+            let isValid = true;
+
+            // Validate Phone Number
+            if (!phonePattern.test(phoneInput.value.trim())) {
+                phoneError.textContent = "Please enter a valid 10-digit phone number.";
+                phoneInput.classList.add("is-invalid");
+                phoneError.style.display = "block";
+                if (isValid) phoneInput.focus(); // Set focus on first error field
+                isValid = false;
+            } else {
+                phoneError.textContent = "";
+                phoneInput.classList.remove("is-invalid");
+                phoneError.style.display = "none";
+            }
+
+            // Validate Email
+            if (!emailPattern.test(emailInput.value.trim())) {
+                emailError.textContent = "Please enter a valid email address.";
+                emailInput.classList.add("is-invalid");
+                emailError.style.display = "block";
+                if (isValid) emailInput.focus(); // Set focus on first error field
+                isValid = false;
+            } else {
+                emailError.textContent = "";
+                emailInput.classList.remove("is-invalid");
+                emailError.style.display = "none";
+            }
+
+            if (!isValid) {
+                event.preventDefault(); // Stop form submission if validation fails
+            }
+        });
+
+        // Real-time validation when typing
+        phoneInput.addEventListener("input", function () {
+            if (phonePattern.test(this.value.trim())) {
+                phoneError.textContent = "";
+                phoneInput.classList.remove("is-invalid");
+                phoneError.style.display = "none";
+            } else {
+                phoneError.style.display = "block";
+            }
+        });
+
+        emailInput.addEventListener("input", function () {
+            if (emailPattern.test(this.value.trim())) {
+                emailError.textContent = "";
+                emailInput.classList.remove("is-invalid");
+                emailError.style.display = "none";
+            } else {
+                emailError.style.display = "block";
+            }
+        });
+    });
+
+    </script>
+
+</body>
+</html>
+
